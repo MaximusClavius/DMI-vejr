@@ -18,10 +18,11 @@ Når man har et API-nøgle og fundet relevant StationsID, så skal man gøre fø
 2) Lav en "template sensor", som skal fiske relevante data ud af JSON output'tet (se filen: template-sensor)
 3) Lav kort i dashboard. Der er to eksempler her - en på 10. minuts data og en på time data (se filerne: Kort: Aktuel vejr & Kort: Aktuel vejr (seneste time)) 
 
-Bemærk: 
+### Bemærk
 1) Det er forskelligt hvilke værdier der er tilgængelig for de forskellige vejrstationer
-2) Attributten: weather er en kode til en tektuel beskrivelse, og den opdateres ikke altid
-3) Template sensor overskriver værdierne hver eneste gang - også selvom der ikke er noget indhold. Tricket er at gemme forrige værdi, og opdater med den nye såfremt den findes. Det dette formål skal man bruge namespace i jinja2, fx
+2) Viste kort bruger "multiple-entity-row", som skal hente via HACS
+3) Attributten: weather er en kode til en tektuel beskrivelse, og den opdateres ikke altid (ved normal opholdsvejr). Teksterne findes her: https://opendatadocs.dmi.govcloud.dk/en/Data/Meteorological_Observation_Data#codes-100-199-from-automatic-weather-stations, og er kun koder 100-199. 
+5) Template sensor overskriver værdierne hver eneste gang - også selvom der ikke er noget indhold. Tricket er at gemme forrige værdi, og opdater med den nye såfremt den findes. Det dette formål skal man bruge namespace i jinja2, fx
 ```
 humidity_past1h: >
 {% set ns = namespace(value = state_attr('sensor.current_weather', 'humidity_past1h')) %} # gem forrige værdi
