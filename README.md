@@ -1,3 +1,5 @@
+# DMI open data og aktuel vejr
+
 Hent aktuel vejr fra DMI open data: https://opendatadocs.dmi.govcloud.dk/DMIOpenData
 
 Det kræver du får en API nøgle og finder nærmeste vejrstation: https://www.dmi.dk/friedata/observationer. Vælg vejrstation og se aflæs StationsID længere nede på siden.
