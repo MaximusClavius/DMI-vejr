@@ -1,0 +1,110 @@
+type: entities
+entities:
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: time_stamp_last10min
+    name: Tidspunkt
+    icon: mdi:clock
+  - entity: sensor.current_weather
+    icon: mdi:thermometer
+    type: custom:multiple-entity-row
+    name: Temperatur
+    show_state: false
+    entities:
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: temp_dry
+        name: Tør
+        unit: °C
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: temp_dew
+        name: Dug
+        unit: °C
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: humidity
+    name: Fugtighed
+    suffix: '%'
+    icon: mdi:water-percent
+  - entity: sensor.current_weather
+    icon: mdi:gauge
+    type: custom:multiple-entity-row
+    name: Tryk
+    show_state: false
+    entities:
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: pressure
+        name: Tryk
+        unit: hPa
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: pressure_at_sea
+        name: Ved havet
+        unit: hPa
+  - entity: sensor.current_weather
+    icon: mdi:windsock
+    type: custom:multiple-entity-row
+    name: Vind
+    show_state: false
+    entities:
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: wind_dir
+        name: Retning
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: wind_speed
+        name: Hastighed
+        unit: m/s
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: wind_min
+        name: Min
+        unit: m/s
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: wind_max
+        name: Max
+        unit: m/s
+  - entity: sensor.current_weather
+    icon: mdi:clouds
+    type: custom:multiple-entity-row
+    name: Sky
+    show_state: false
+    entities:
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: cloud_cover
+        name: Skydække
+        unit: '%'
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: cloud_height
+        name: Højde
+        unit: m
+  - entity: sensor.current_weather
+    icon: mdi:eye
+    type: custom:multiple-entity-row
+    name: Synlighed
+    show_state: false
+    entities:
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: visibility
+        name: Synlighed
+        unit: m
+      - type: attribute
+        entity: sensor.current_weather
+        attribute: visib_mean_last10min
+        name: Snit
+        unit: m
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: weather
+    name: Vejr
+    icon: mdi:weather-cloudy
+state_color: false
+show_header_toggle: false
+title: Aktuel vejr
