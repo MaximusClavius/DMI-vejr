@@ -1,0 +1,56 @@
+type: entities
+title: Aktuel vejr (seneste time)
+show_header_toggle: false
+entities:
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: time_stamp_past1h
+    name: Tidspunkt
+    icon: mdi:clock
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: temp_max_past1h
+    name: Seneste times maksimale lufttemperatur
+    suffix: °C
+    icon: mdi:thermometer
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: temp_min_past1h
+    name: Seneste times minimum lufttemperatur
+    suffix: °C
+    icon: mdi:thermometer
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: temp_mean_past1h
+    name: Seneste times middellufttemperatur
+    suffix: °C
+    icon: mdi:thermometer
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: humidity_past1h
+    name: Seneste times relativ luftfugtighed
+    suffix: '%'
+    icon: mdi:water-percent
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: wind_dir_past1h
+    name: Seneste times middelvindretning
+    icon: mdi:windsock
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: wind_speed_past1h
+    name: Seneste times middelvindhastighed
+    suffix: m/s
+    icon: mdi:windsock
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: wind_min_past1h
+    name: Laveste 3 sekunders middelvindhastighed
+    suffix: m/s
+    icon: mdi:windsock
+  - type: attribute
+    entity: sensor.current_weather
+    attribute: wind_gust_always_past1h
+    name: Højeste 3 sekunders middelvindhastighed
+    suffix: m/s
+    icon: mdi:windsock
