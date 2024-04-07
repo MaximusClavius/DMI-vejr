@@ -1,0 +1,312 @@
+- sensor:
+    - name: current_weather
+      state: '{{ as_timestamp(state_attr("sensor.local_weatherstation_dmi", "timeStamp")) | timestamp_custom("%Y-%m-%d %H:%M:%S", True) }}'
+      attributes:
+        friendly_name: Aktuel vejr
+        time_stamp: >
+          {{ as_timestamp(state_attr("sensor.local_weatherstation_dmi", "timeStamp")) | timestamp_custom("%Y-%m-%d %H:%M:%S", True) }}
+        time_stamp_last10min: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {{ geometry.properties.observed }}
+            {% break %}
+          {% endfor %}
+        time_stamp_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'time_stamp_past1h')) %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if 'past1h' in geometry.properties.parameterId | lower %}
+              {% set ns.value = geometry.properties.observed %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        cloud_cover: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'cloud_cover' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        cloud_height: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'cloud_height')) %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'cloud_height' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        humidity: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'humidity' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        humidity_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'humidity_past1h')) %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'humidity_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        #precip_dur_past10min:
+        #precip_dur_past1h:
+        #precip_past10min:
+        #precip_past1h:
+        pressure: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'pressure' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        pressure_at_sea: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'pressure_at_sea' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        temp_dew: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'temp_dew' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        temp_dry: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'temp_dry' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        #temp_grass:
+        #temp_grass_max_past1h:
+        #temp_grass_mean_past1h:
+        #temp_grass_min_past1h:
+        #temp_max_past12h:
+        temp_max_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_max_past1h'))  %}
+          {% set value = state_attr('sensor.current_weather', 'temp_max_past1h') %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'temp_max_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        temp_mean_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_mean_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'temp_mean_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        #temp_min_past12h:
+        temp_min_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_min_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'temp_min_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        visib_mean_last10min: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'visib_mean_last10min' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        visibility: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'visibility' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        weather: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'weather' %}
+              {% if geometry.properties.value >= 100 %}
+                {% set index = (geometry.properties.value - 100) | int %}
+                {{ ['Intet væsentligt vejr observeret',
+                  'Skyer er generelt opløst eller blevet mindre udviklede i løbet af den sidste time',
+                  'Himlens tilstand i det hele taget uændret den seneste time',
+                  'Skyer er generelt dannet eller udviklet i løbet af den sidste time',
+                  'Dis eller røg, eller støv i ophæng i luften, sigtbarhed lig med eller større end 1 km',
+                  'Dis eller røg, eller støv i ophæng i luften, sigtbarhed mindre end 1 km',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Tåge',
+                  'diamant støv',
+                  'Fjernt lyn',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Squalls',
+                  'Reserveret',
+                  'Tåge',
+                  'Nedbør',
+                  'Støvregn (ikke fryser) eller snefnug',
+                  'Regn (ikke frost)',
+                  'Sne',
+                  'Frostregn eller iskaldt regn',
+                  'Tordenvejr (med eller uden nedbør)',
+                  'Blæsende eller drivende sne eller sand',
+                  'Blæsende eller drivende sne eller sand, sigtbarhed lig med eller større end 1 km',
+                  'Blæser eller driver sne eller sand, sigtbarhed mindre end 1 km',
+                  'Tåge',
+                  'Tåge eller iståge i pletter',
+                  'Tåge eller iståge er blevet tyndere i løbet af den seneste time',
+                  'Tåge eller iståge, ingen nævneværdig ændring inden for den seneste time',
+                  'Tåge eller iståge, er begyndt eller blevet tykkere i løbet af den seneste time',
+                  'Tåge, der afsætter rim',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Reserveret',
+                  'Nedbør',
+                  'Nedbør, let eller moderat',
+                  'Nedbør, kraftig',
+                  'Flydende nedbør, let eller moderat',
+                  'Flydende nedbør, tung',
+                  'Fast nedbør, let eller moderat',
+                  'Fast nedbør, kraftig',
+                  'Frostregn, let eller moderat',
+                  'Frysende nedbør, kraftig',
+                  'Reserveret',
+                  'Støvregn',
+                  'Støvregn, fryser ikke, let',
+                  'Støvregn, fryser ikke, moderat',
+                  'Drypregn, fryser ikke, tung',
+                  'Støvregn, fryser, let',
+                  'Støvregn, frysende, moderat',
+                  'Støvregn, frysende, tungt',
+                  'Finregn og regn, let',
+                  'Finregn og regn, moderat eller kraftig',
+                  'Reserveret',
+                  'Regn',
+                  'Regn, ikke frost, let',
+                  'Regn, ikke frost, moderat',
+                  'Regn, ikke frost, kraftigt',
+                  'Regn, frost, let',
+                  'Regn, frost, moderat',
+                  'Regn, frost, tungt',
+                  'Regn (eller støvregn) og sne, let',
+                  'Regn (eller støvregn) og sne, moderat eller kraftigt',
+                  'Reserveret',
+                  'Sne',
+                  'Sne, let',
+                  'Sne, moderat',
+                  'Sne, tung',
+                  'Ispellets, små',
+                  'Ispellets, moderat',
+                  'Ispellets, tunge',
+                  'Snekorn',
+                  'Iskrystaller',
+                  'Reserveret',
+                  'Byger eller periodisk nedbør',
+                  'Regnbyger eller periodisk regn, let',
+                  'Regnbyger eller periodisk regn, moderat',
+                  'Regnbyger eller periodisk regn, kraftig',
+                  'Regnbyge(r) eller periodisk regn, voldsom',
+                  'Snebyger eller periodisk sne, let',
+                  'Snebyger eller periodisk sne, moderat',
+                  'Snebyger eller periodisk sne, kraftig',
+                  'Reserveret',
+                  'Hagl',
+                  'Tordenvejr',
+                  'Tordenvejr, let eller moderat, uden nedbør',
+                  'Tordenvejr, let eller moderat, med regnbyger og/eller snebyger',
+                  'Tordenvejr, let eller moderat, med hagl',
+                  'Tordenvejr, kraftig, uden nedbør',
+                  'Tordenvejr, kraftigt, med regnbyger og/eller snebyger',
+                  'Tordenvejr, kraftig, med hagl',
+                  'Reserveret',
+                  'Reserveret',
+                  'Tornado'][index] }}
+                {% break %}
+              {% else %}
+                {{ geometry.properties.value }}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        wind_dir: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_dir' %}
+              {% set index = ((geometry.properties.value + 22.5 / 2) % 360 / 22.5) | int %}
+              {{ ['N','N/NØ','NØ','Ø/NØ','Ø','Ø/SØ','SØ','S/SØ','S','S/SV','SV','V/SV','V','V/NV','NV','N/NV','N'][index] }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        wind_dir_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_dir_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_dir_past1h' %}
+              {% set index = ((geometry.properties.value + 22.5 / 2) % 360 / 22.5) | int %}
+              {% set ns.value =  ['N','N/NØ','NØ','Ø/NØ','Ø','Ø/SØ','SØ','S/SØ','S','S/SV','SV','V/SV','V','V/NV','NV','N/NV','N'][index] %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        wind_gust_always_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_gust_always_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_gust_always_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        wind_max: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_max' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        #wind_max_per10min_past1h:
+        wind_min: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_min' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        wind_min_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_min_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_min_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+        wind_speed: >
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_speed' %}
+              {{ geometry.properties.value }}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+        wind_speed_past1h: >
+          {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_speed_past1h'))  %}
+          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+            {% if geometry.properties.parameterId == 'wind_speed_past1h' %}
+              {% set ns.value = geometry.properties.value %}
+              {% break %}
+            {% endif %}
+          {% endfor %}
+          {{ ns.value }}
+      icon: mdi:weather-cloudy
