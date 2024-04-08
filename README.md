@@ -4,7 +4,7 @@ Hent aktuelt vejr fra DMI open data: https://opendatadocs.dmi.govcloud.dk/DMIOpe
 
 Det kræver du får en API nøgle og finder nærmeste vejrstation: https://www.dmi.dk/friedata/observationer. Vælg vejrstation og se aflæs StationsID længere nede på siden.
 
-Hver 10. minut fås disse data, dog er "Vejr" er ikke altid beskrevet og til tider fejlagtig, fx en skyfri himmel med høj sol blev beskrevet med "Tåge" eller 100:
+Hver 10. minut fås disse data, dog er "Vejr" er ikke altid beskrevet og til tider fejlagtig, fx en skyfri himmel med høj sol blev beskrevet med "Tåge" eller 100.
 
 ![image](https://github.com/MaximusClavius/DMI-vejr/assets/103023823/bc79b91a-fc69-40c0-ab48-c21ac9287665)
 
