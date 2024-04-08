@@ -1,7 +1,8 @@
 - sensor:
     name: local weatherstation - DMI
-    command: "curl -s 'https://dmigw.govcloud.dk/v2/metObs/collections/observation/items?stationId=06120&period=latest-10-minutes&api-key=********-****-****-****-************'"
+    command: "curl -s 'https://dmigw.govcloud.dk/v2/metObs/collections/observation/items?stationId=06120&period=latest-10-minutes&api-key=399595f5-e4a6-4c02-bcd6-4d947f42da32'"
     scan_interval: 600
+    command_timeout: 30
     value_template: '{% if value_json is not none %}OK - {{as_timestamp(value_json["timeStamp"])|timestamp_local}} - Antal: {{value_json["numberReturned"]}}{% else %}Unavailable{% endif %}'
     json_attributes:
       - features
