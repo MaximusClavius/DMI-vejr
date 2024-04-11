@@ -1,6 +1,6 @@
 # DMI open data og aktuel vejr
 
-Hent aktuelt vejr fra DMI open data: https://opendatadocs.dmi.govcloud.dk/DMIOpenData
+Hent aktuelt vejr fra DMI open data: https://opendatadocs.dmi.govcloud.dk/DMIOpenData. Det er jomfruelige data fra vejrstationen, så visse afvigelser vil der være. Ønsker man valideret data (af metrologer), så skal man bruge ”Climate Data”, men de vil være en time gamle.
 
 Det kræver du får en API nøgle og finder nærmeste vejrstation: https://www.dmi.dk/friedata/observationer. Vælg vejrstation og se aflæs StationsID længere nede på siden.
 
