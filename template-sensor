@@ -6,13 +6,15 @@
         time_stamp: >
           {{ as_timestamp(state_attr("sensor.local_weatherstation_dmi", "timeStamp")) | timestamp_custom("%Y-%m-%d %H:%M:%S", True) }}
         time_stamp_last10min: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {{ geometry.properties.observed }}
             {% break %}
           {% endfor %}
         time_stamp_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'time_stamp_past1h')) %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if 'past1h' in geometry.properties.parameterId | lower %}
               {% set ns.value = geometry.properties.observed %}
               {% break %}
@@ -20,7 +22,8 @@
           {% endfor %}
           {{ ns.value }}
         cloud_cover: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'cloud_cover' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -28,7 +31,8 @@
           {% endfor %}
         cloud_height: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'cloud_height')) %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'cloud_height' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -36,7 +40,8 @@
           {% endfor %}
           {{ ns.value }}
         humidity: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'humidity' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -44,7 +49,8 @@
           {% endfor %}
         humidity_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'humidity_past1h')) %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'humidity_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -55,29 +61,42 @@
         #precip_dur_past1h:
         #precip_past10min:
         #precip_past1h:
+        #precip_past1min
+        #snow_depth_man
+        #snow_cover_man
+        #radia_glob
+        #radia_glob_past1h
+        #sun_last10min_glob
+        #sun_last1h_glob
+        #leav_hum_dur_past10min
+        #leav_hum_dur_past1h
         pressure: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'pressure' %}
               {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
         pressure_at_sea: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'pressure_at_sea' %}
               {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
         temp_dew: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'temp_dew' %}
               {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
         temp_dry: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'temp_dry' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -88,10 +107,14 @@
         #temp_grass_mean_past1h:
         #temp_grass_min_past1h:
         #temp_max_past12h:
+        #temp_soil
+        #temp_soil_max_past1h
+        #temp_soil_mean_past1h
+        #temp_soil_min_past1h
         temp_max_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_max_past1h'))  %}
-          {% set value = state_attr('sensor.current_weather', 'temp_max_past1h') %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'temp_max_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -100,7 +123,8 @@
           {{ ns.value }}
         temp_mean_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_mean_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'temp_mean_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -110,7 +134,8 @@
         #temp_min_past12h:
         temp_min_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'temp_min_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'temp_min_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -118,21 +143,24 @@
           {% endfor %}
           {{ ns.value }}
         visib_mean_last10min: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'visib_mean_last10min' %}
               {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
         visibility: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'visibility' %}
               {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
         weather: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'weather' %}
               {% if geometry.properties.value >= 100 %}
                 {% set index = (geometry.properties.value - 100) | int %}
@@ -243,7 +271,8 @@
             {% endif %}
           {% endfor %}
         wind_dir: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_dir' %}
               {% set index = ((geometry.properties.value + 22.5 / 2) % 360 / 22.5) | int %}
               {{ ['N','N/NØ','NØ','Ø/NØ','Ø','Ø/SØ','SØ','S/SØ','S','S/SV','SV','V/SV','V','V/NV','NV','N/NV','N'][index] }}
@@ -252,7 +281,8 @@
           {% endfor %}
         wind_dir_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_dir_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_dir_past1h' %}
               {% set index = ((geometry.properties.value + 22.5 / 2) % 360 / 22.5) | int %}
               {% set ns.value =  ['N','N/NØ','NØ','Ø/NØ','Ø','Ø/SØ','SØ','S/SØ','S','S/SV','SV','V/SV','V','V/NV','NV','N/NV','N'][index] %}
@@ -262,7 +292,8 @@
           {{ ns.value }}
         wind_gust_always_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_gust_always_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_gust_always_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
@@ -270,7 +301,8 @@
           {% endfor %}
           {{ ns.value }}
         wind_max: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_max' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -278,7 +310,8 @@
           {% endfor %}
         #wind_max_per10min_past1h:
         wind_min: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_min' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -286,15 +319,17 @@
           {% endfor %}
         wind_min_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_min_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_min_past1h' %}
-              {% set ns.value = geometry.properties.value %}
+              {{ geometry.properties.value }}
               {% break %}
             {% endif %}
           {% endfor %}
           {{ ns.value }}
         wind_speed: >
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_speed' %}
               {{ geometry.properties.value }}
               {% break %}
@@ -302,7 +337,8 @@
           {% endfor %}
         wind_speed_past1h: >
           {% set ns = namespace(value = state_attr('sensor.current_weather', 'wind_speed_past1h'))  %}
-          {% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+          {% set features = state_attr("sensor.local_weatherstation_dmi", "features") or [] %}
+          {% for geometry in features %}
             {% if geometry.properties.parameterId == 'wind_speed_past1h' %}
               {% set ns.value = geometry.properties.value %}
               {% break %}
