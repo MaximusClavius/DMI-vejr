@@ -23,10 +23,12 @@ Når man har et API-nøgle og fundet relevant StationsID, så skal man gøre fø
 2) Viste kort bruger "multiple-entity-row", som skal hente via HACS
 3) Attributten: weather er en kode til en tekstuel beskrivelse, og den opdateres ikke altid (ved normal opholdsvejr). Teksterne findes her: https://opendatadocs.dmi.govcloud.dk/en/Data/Meteorological_Observation_Data#codes-100-199-from-automatic-weather-stations, og er kun koderne: 100-199. 
 5) Template sensor overskriver værdierne hver eneste gang - også selvom der ikke er noget indhold. Tricket er at gemme forrige værdi, og opdater med den nye såfremt den findes. Det dette formål skal man bruge namespace i jinja2, fx
+6) Tager hensyn til json kan være tom eller null
 ```
 humidity_past1h: >
 {% set ns = namespace(value = state_attr('sensor.current_weather', 'humidity_past1h')) %} # gem forrige værdi
-{% for geometry in state_attr("sensor.local_weatherstation_dmi", "features") %}
+{% set features = state_attr('sensor.local_weatherstation_dmi', 'features') or [] %}
+  {% for geometry in features %}
   {% if geometry.properties.parameterId == 'humidity_past1h' %}
     {% set ns.value = geometry.properties.value %}                                        # gem den nye værdi
     {% break %}                                                                           # og ud af løkken
